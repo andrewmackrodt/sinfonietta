@@ -1,0 +1,17 @@
+app/broker-service/coverage/
+bower_components/
+build/
+node_modules/
+vendor/
+!.idea/
+.idea/inspectionProfiles/
+!.idea/inspectionProfiles/Project_Default.xml
+.idea/deployment.xml
+.idea/workspace.xml
+.idea/*_prj.xml
+.vagrant/
+.vscode/
+!.vscode/launch.json
+Thumbs.db
+*-error.log
+.DS_Store

@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "vue.js: chrome",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}/app/broker-web",
+            "sourceMapPathOverrides": {
+                "webpack://@app/*": "${workspaceFolder}/app/*",
+                "webpack://@app/node_modules/*": "${workspaceFolder}/node_modules/*",
+                "webpack://@lib/*": "${workspaceFolder}/lib/*",
+                "webpack://@lib/node_modules/*": "${workspaceFolder}/node_modules/*"
+            }
+        }
+    ]
+}

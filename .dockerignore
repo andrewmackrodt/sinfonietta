@@ -1,0 +1,11 @@
+# exclude everything
+*
+
+# include packages
+!packages/*/
+packages/*/node_modules/
+packages/*/*.iml
+
+# include root dependecies
+!package.json
+!yarn.lock

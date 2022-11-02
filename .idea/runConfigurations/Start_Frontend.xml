@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Start Frontend" type="NodeJSConfigurationType" application-parameters="workspace @app/broker-web start" path-to-node="$USER_HOME$/.local/bin/yarn" working-dir="$PROJECT_DIR$">
+    <method v="2" />
+  </configuration>
+</component>

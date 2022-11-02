@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/packages/broker-client/broker-client.iml" filepath="$PROJECT_DIR$/packages/broker-client/broker-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/broker-service/broker-service.iml" filepath="$PROJECT_DIR$/packages/broker-service/broker-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/broker-web/broker-web.iml" filepath="$PROJECT_DIR$/packages/broker-web/broker-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/common/common.iml" filepath="$PROJECT_DIR$/packages/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/express-mvc/express-mvc.iml" filepath="$PROJECT_DIR$/packages/express-mvc/express-mvc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sinfonietta.iml" filepath="$PROJECT_DIR$/sinfonietta.iml" />
+    </modules>
+  </component>
+</project>

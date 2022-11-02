@@ -1,0 +1,29 @@
+parser: 'vue-eslint-parser'
+extends:
+  - 'plugin:vue/vue3-recommended'
+  - '../../.eslintrc.yml'
+parserOptions:
+  ecmaVersion: 2018
+  parser: '@typescript-eslint/parser'
+  extraFileExtensions:
+    - '.vue'
+plugins:
+  - '@typescript-eslint'
+  - 'vue'
+rules:
+  'vue/component-name-in-template-casing':
+    - error
+    - kebab-case
+  'vue/html-indent':
+    - error
+    - 4
+  'vue/max-attributes-per-line':
+    - off
+  'vue/no-lone-template':
+    - off
+  'vue/no-multiple-template-root':
+    - off
+  'vue/no-v-html':
+    - off
+  'vue/require-v-for-key':
+    - off

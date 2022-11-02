@@ -1,0 +1,19 @@
+@import "~bootstrap/scss/functions";
+
+@mixin phone {
+  @include media-breakpoint-down(sm) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @include media-breakpoint-only(md) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @include media-breakpoint-up(lg) {
+    @content;
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "lib": [
+      "dom",
+      "es2020"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "paths": {
+      "@lib/common/*": ["../../common/src/*"],
+      "@lib/express-mvc/*": ["../../express-mvc/src/*"]
+    },
+    "strict": true,
+    "target": "es2020"
+  },
+  "files": [
+    "./index.ts"
+  ],
+  "include": [
+    "../common/src/**/*.ts",
+    "../express-mvc/src/**/*.ts",
+    "../express-mvc/cluster.ts",
+    "./migrations/**/*.ts",
+    "./src/**/*.ts",
+    "./types/**/*.d.ts"
+  ],
+  "exclude": [
+    "../common/src/**/*.test.ts",
+    "../express-mvc/*src/*/*.test.ts",
+    "./migrations/**/*.test.ts",
+    "./src/**/*.test.ts"
+  ]
+}

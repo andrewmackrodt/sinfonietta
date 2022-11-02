@@ -1,0 +1,25 @@
+{
+  "name": "@lib/broker-client",
+  "version": "0.0.0",
+  "description": "",
+  "homepage": "https://github.com/andrewmackrodt/sinfonietta",
+  "license": "UNLICENSED",
+  "author": {
+    "name": "Andrew Mackrodt",
+    "email": "andrewmackrodt@gmail.com",
+    "url": "https://github.com/andrewmackrodt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrewmackrodt/sinfonietta.git"
+  },
+  "scripts": {
+    "lint": "eslint --ext .ts ",
+    "lint:fix": "eslint --ext .ts --fix ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@lib/common": "*",
+    "axios": "^1.1.3"
+  }
+}

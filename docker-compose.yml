@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  broker:
+    build:
+      context: ./
+      dockerfile: ./docker/broker/Dockerfile
+    environment:
+      RETHINKDB_CONNECTION_HOST: rethinkdb
+    ports:
+      - 127.0.0.1:8080:8080/tcp
+    depends_on:
+      - rethinkdb
+
+  rethinkdb:
+    image: rethinkdb:2-bullseye-slim
+    ports:
+      - 127.0.0.1:27015:8080/tcp
+      - 127.0.0.1:28015:28015
+      - 172.17.0.1:28015:28015
+    volumes:
+      - rethinkdb_data:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 2G
+    restart: unless-stopped
+
+volumes:
+  rethinkdb_data:

@@ -1,0 +1,39 @@
+{
+  "name": "@app/broker-service",
+  "version": "0.0.0",
+  "description": "",
+  "homepage": "https://github.com/andrewmackrodt/sinfonietta",
+  "license": "UNLICENSED",
+  "author": {
+    "name": "Andrew Mackrodt",
+    "email": "andrewmackrodt@gmail.com",
+    "url": "https://github.com/andrewmackrodt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrewmackrodt/sinfonietta.git"
+  },
+  "main": "index.ts",
+  "scripts": {
+    "build": "npm-run-all clean:build build:bundle",
+    "build:bundle": "bash ./build.sh",
+    "clean": "npm-run-all clean:build clean:coverage",
+    "clean:build": "del --force \"../../build/dist/**\" \"!../../build/dist/public/\" \"!../../build/dist/public/**\"",
+    "clean:coverage": "shx rm -rf coverage/",
+    "coverage": "jest --collect-coverage",
+    "lint": "eslint --ext ts .",
+    "lint:check": "eslint --ext ts --format rdjson . | reviewdog -f=rdjson -reporter=github-check",
+    "lint:fix": "eslint --ext ts --fix .",
+    "lint:review": "eslint --ext ts --format rdjson . | reviewdog -f=rdjson -reporter=github-pr-review",
+    "start": "ts-node-dev -r tsconfig-paths/register --files --respawn --transpile-only index",
+    "test": "jest"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "dependencies": {
+    "@lib/common": "*",
+    "@lib/express-mvc": "*",
+    "rethinkdb": "^2.4.2"
+  }
+}

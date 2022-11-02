@@ -1,0 +1,8 @@
+{
+  "name": "Node.js & TypeScript",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:16-bullseye",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-from-docker:1": {}
+  },
+  "postCreateCommand": "yarn install && docker-compose up -d rethinkdb"
+}
