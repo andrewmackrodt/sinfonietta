@@ -61,13 +61,13 @@ export class TopicBrokerController {
     @Middleware(validator.body(produceBodySchema))
     @Post('produce')
     public async produce(req: ValidatedRequest<ProduceQuerySchema>, res: Response) {
-        const messageDateList = (Array.isArray(req.body) ? req.body : [req.body])
+        const messageDataList = (Array.isArray(req.body) ? req.body : [req.body])
             .map(messageData => ({
                 ...{ topic: req.params.topic },
                 ...messageData,
             }))
 
-        const messages = await this.messageRepository.create(messageDateList)
+        const messages = await this.messageRepository.create(messageDataList)
 
         if (Array.isArray(req.body)) {
             res.json(messages)

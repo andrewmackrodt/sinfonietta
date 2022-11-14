@@ -21,7 +21,7 @@ export interface ListOptions extends PaginationOptions {
 type CreateObjectType<T> = {
     topic: string
     data: T
-    maxAttempts?: number
+    max_attempts?: number
 }
 
 export enum MessageStatus {
@@ -207,10 +207,10 @@ export class MessageRepository {
         maxAttempts?: number,
     ): Promise<Message<T> | Message<T>[]> {
         const insertData: InsertExpression<Message<T>>[] =
-            ( ! Array.isArray(topic) ? [{ topic, data, maxAttempts }] : topic)
+            ( ! Array.isArray(topic) ? [{ topic, data, max_attempts: maxAttempts }] : topic)
                 .map(obj => ({
                     attempts: 0,
-                    attempts_remaining: obj.maxAttempts ?? this.defaultMaxAttempts,
+                    attempts_remaining: obj.max_attempts ?? this.defaultMaxAttempts,
                     claim_identity: null,
                     claim_expires_at: r.now(),
                     data: obj.data as any,
