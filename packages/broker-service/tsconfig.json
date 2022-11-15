@@ -24,7 +24,6 @@
   "include": [
     "../common/src/**/*.ts",
     "../express-mvc/src/**/*.ts",
-    "../express-mvc/cluster.ts",
     "./migrations/**/*.ts",
     "./src/**/*.ts",
     "./types/**/*.d.ts"

@@ -1,9 +1,12 @@
 import { Scheduler } from './Scheduler'
 import { container, DependencyContainer, injectable, InjectionToken } from './decorators/di'
+import { clusterApplication } from './helpers/cluster'
 import { info, error } from './helpers/debug'
 import { BootService } from './services/BootService'
 import { Service } from './services/Service'
 import EventEmitter2 from 'eventemitter2'
+import { AggregatorRegistry } from 'prom-client'
+import cluster, { Worker } from 'cluster'
 
 @injectable()
 export class Application {
@@ -42,7 +45,17 @@ export class Application {
         return container.resolve(token)
     }
 
-    public async start(): Promise<unknown> {
+    public async start(options?: { cluster: boolean }): Promise<unknown> {
+        if (options?.cluster) {
+            const aggregatorRegistry = new AggregatorRegistry()
+
+            if (cluster.isPrimary) {
+                return clusterApplication({
+                    cb: worker => this.onGetMetricsReq(worker, aggregatorRegistry),
+                })
+            }
+        }
+
         if ( ! process.env.JEST_WORKER_ID) {
             process.on('SIGTERM', () => this.stop())
 
@@ -94,5 +107,20 @@ export class Application {
         } else {
             info(`shutdown: exit code ${exitCode}`)
         }
+    }
+
+    private onGetMetricsReq(worker: Worker, aggregatorRegistry: AggregatorRegistry) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        worker.on('message', async (message: any) => {
+            if (typeof message === 'object'
+                && message !== null
+                && message.type === 'api:getMetricsReq'
+            ) {
+                worker.send({
+                    type: 'api:getMetricsRes',
+                    metrics: await aggregatorRegistry.clusterMetrics(),
+                })
+            }
+        })
     }
 }

@@ -6,6 +6,7 @@ import { Application } from '@lib/express-mvc/Application'
 import errorHandler from '@lib/express-mvc/controllers/ErrorRequestHandler'
 import notFoundHandler from '@lib/express-mvc/controllers/NotFoundRequestHandler'
 import { findModules } from '@lib/express-mvc/helpers/mvc'
+import { isTrueRegExp } from '@lib/express-mvc/helpers/stdlib'
 import { Server } from '@lib/express-mvc/http/Server'
 import { HttpService } from '@lib/express-mvc/services/HttpService'
 import { Controller } from '@overnightjs/core/lib/decorators/types'
@@ -63,5 +64,7 @@ app.registerServices(
 )
 
 if ( ! process.env.JEST_WORKER_ID && require.main === module) {
-    void app.start()
+    void app.start({
+        cluster: isTrueRegExp(process.env.CLUSTER),
+    })
 }

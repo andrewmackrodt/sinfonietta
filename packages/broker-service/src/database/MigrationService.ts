@@ -3,13 +3,10 @@ import { MigrationRepository } from './MigrationRepository'
 import { RethinkDB } from './RethinkDB'
 import { injectable } from '@lib/express-mvc/decorators/di'
 import { info } from '@lib/express-mvc/helpers/debug'
-import glob from 'glob'
+import { findModules } from '@lib/express-mvc/helpers/mvc'
 import { randomUUID } from 'crypto'
 import path from 'path'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isTs = Boolean(process.env.TS_NODE_DEV || (<any>process)[Symbol.for('ts-node.register.instance')])
-const ext = isTs ? 'ts' : 'js'
 const migrationsPath = path.resolve(__dirname, '../../migrations')
 
 type RollbackOptions =
@@ -17,12 +14,18 @@ type RollbackOptions =
     { id: string } |
     { step: number }
 
+type MigrationConstructor = new (db: RethinkDB) => Migration
+
 @injectable()
 export class MigrationService {
+    private readonly migrations: Migration[]
+
     public constructor(
         private readonly db: RethinkDB,
         private readonly repository: MigrationRepository,
-    ) { }
+    ) {
+        this.migrations = this.findMigrations()
+    }
 
     public async run(): Promise<string> {
         const migrationsTableExists = await this.repository.hasMigrationsTable()
@@ -42,7 +45,7 @@ export class MigrationService {
 
         info(`Starting migrations batch=${batch}`)
 
-        for (const migration of this.getAvailable()) {
+        for (const migration of this.migrations) {
             if (completed.includes(migration.id)) {
                 info(`- ${migration.id}\t[Skipped]`)
 
@@ -92,18 +95,7 @@ export class MigrationService {
         }
     }
 
-    private getAvailable(): Migration[] {
-        const migrations: Migration[] = []
-
-        /* eslint-disable @typescript-eslint/no-var-requires */
-        glob.sync(`${migrationsPath}/*.${ext}`).map(filepath => {
-            const ctor = require(filepath).default
-            const migration = new ctor(this.db)
-
-            migrations.push(migration)
-        })
-        /* eslint-enable @typescript-eslint/no-var-requires */
-
-        return migrations
+    private findMigrations(): Migration[] {
+        return findModules<MigrationConstructor>(migrationsPath).map(ctor => new ctor(this.db))
     }
 }

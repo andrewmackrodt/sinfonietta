@@ -18,7 +18,6 @@
     "target": "es2020"
   },
   "files": [
-    "./cluster.ts",
     "./index.ts"
   ],
   "include": [

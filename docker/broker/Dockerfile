@@ -41,10 +41,9 @@ RUN yarn install --production
 
 COPY --from=builder /src/build/dist/ ./
 
-RUN cp node_modules/@lib/express-mvc/cluster.js* ./
-
 USER ubuntu
 
 ENV NODE_ENV "production"
+ENV CLUSTER "true"
 
-CMD ["node", "/opt/app/cluster"]
+CMD ["node", "/opt/app"]

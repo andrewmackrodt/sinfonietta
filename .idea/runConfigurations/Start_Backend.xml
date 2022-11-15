@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Start Backend" type="NodeJSConfigurationType" path-to-node="$PROJECT_DIR$/node_modules/.bin/ts-node-dev" node-parameters="-r tsconfig-paths/register --files --respawn --transpile-only" path-to-js-file="$PROJECT_DIR$/packages/broker-service/index.ts" working-dir="$PROJECT_DIR$/packages/broker-service">
+  <configuration default="false" name="Start Backend" type="NodeJSConfigurationType" path-to-node="$PROJECT_DIR$/node_modules/.bin/ts-node-dev" node-parameters="-r tsconfig-paths/register --respawn --transpile-only" path-to-js-file="index.ts" working-dir="$PROJECT_DIR$/packages/broker-service">
     <method v="2" />
   </configuration>
 </component>
