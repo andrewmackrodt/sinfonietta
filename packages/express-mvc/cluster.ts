@@ -1,6 +1,5 @@
 import { debug } from 'debug'
-import express from 'express'
-import { clusterMetrics } from 'express-prom-bundle'
+import { AggregatorRegistry } from 'prom-client'
 import cluster from 'cluster'
 import os from 'os'
 
@@ -8,19 +7,14 @@ const log = debug('cluster')
 
 log.enabled = true
 
+const promAggregatorRegistry = new AggregatorRegistry()
+
 if (cluster.isPrimary) {
     let respawn = true
-
-    const metricsApp = express()
-    metricsApp.use('/metrics', clusterMetrics())
-    const metricsServer = metricsApp.listen(5001)
 
     process.on('SIGINT', () => {
         // prevent terminated workers from respawning
         respawn = false
-
-        // close metrics server
-        metricsServer.close()
     })
 
     let primaryWorkerId: number | null = null
@@ -37,6 +31,18 @@ if (cluster.isPrimary) {
             primaryWorkerId = worker.id
             log(`elected primary worker (${pid})`)
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        worker.on('message', async (message: any) => {
+            if (typeof message === 'object'
+                && message !== null
+                && message.type === 'api:getMetricsReq'
+            ) {
+                worker.send({
+                    type: 'api:getMetricsRes',
+                    metrics: await promAggregatorRegistry.clusterMetrics(),
+                })
+            }
+        })
     }
 
     cluster.on('exit', (worker, code, signal) => {

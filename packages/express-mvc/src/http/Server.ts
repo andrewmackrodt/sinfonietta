@@ -1,3 +1,4 @@
+import workerMetricsRequestHandler from '../controllers/WorkerMetricsRequestHandler'
 import { info } from '../helpers/debug'
 import { isFalseRegExp, isTrueRegExp } from '../helpers/stdlib'
 import { env } from '../helpers/system'
@@ -14,7 +15,6 @@ import express_prom_bundle from 'express-prom-bundle'
 import PromiseRouter from 'express-promise-router'
 import expressWs, { WebsocketRequestHandler } from 'express-ws'
 import morgan from 'morgan'
-import { AggregatorRegistry } from 'prom-client'
 import { container, inject, injectable } from 'tsyringe'
 import WebSocket from 'ws'
 import cluster from 'cluster'
@@ -225,11 +225,16 @@ export class Server {
         this.app.use(morgan('combined', { stream: { write: msg => info(msg.trimEnd()) } }))
 
         if (this.options.metrics) {
-            const promOpts: express_prom_bundle.Opts = { autoregister: true, includeMethod: true, includePath: true }
+            const promOpts: express_prom_bundle.Opts = {
+                autoregister: true,
+                includeMethod: true,
+                includePath: true,
+            }
 
             if (cluster.isWorker) {
-                new AggregatorRegistry()
                 promOpts.autoregister = false
+
+                this.app.use('/metrics', workerMetricsRequestHandler)
             }
 
             this.app.use(express_prom_bundle(promOpts))
