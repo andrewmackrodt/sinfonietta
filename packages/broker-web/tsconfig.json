@@ -26,11 +26,13 @@
   "include": [
     "../broker-client/src/**/*.ts",
     "../common/src/**/*.ts",
-    "./**/*.ts"
+    "./**/*.ts",
+    "./**/*.vue"
   ],
   "exclude": [
-    "../broker-client/*src/*/*.test.ts",
+    "../broker-client/src/**/*.test.ts",
     "../common/src/**/*.test.ts",
-    "./**/*.test.ts"
+    "./**/*.test.ts",
+    "./**/*.test.vue"
   ]
 }

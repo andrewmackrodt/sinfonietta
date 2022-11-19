@@ -30,7 +30,7 @@
   ],
   "exclude": [
     "../common/src/**/*.test.ts",
-    "../express-mvc/*src/*/*.test.ts",
+    "../express-mvc/src/**/*.test.ts",
     "./migrations/**/*.test.ts",
     "./src/**/*.test.ts"
   ]
