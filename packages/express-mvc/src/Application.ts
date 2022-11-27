@@ -5,7 +5,7 @@ import { info, error } from './helpers/debug'
 import { BootService } from './services/BootService'
 import { Service } from './services/Service'
 import EventEmitter2 from 'eventemitter2'
-import { AggregatorRegistry } from 'prom-client'
+import { AggregatorRegistry, collectDefaultMetrics } from 'prom-client'
 import cluster, { Worker } from 'cluster'
 
 @injectable()
@@ -46,6 +46,8 @@ export class Application {
     }
 
     public async start(options?: { cluster: boolean }): Promise<unknown> {
+        collectDefaultMetrics()
+
         if (options?.cluster) {
             const aggregatorRegistry = new AggregatorRegistry()
 
