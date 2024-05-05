@@ -4,9 +4,6 @@ const jestConfig: Config.InitialOptions = {
     clearMocks: true,
     collectCoverageFrom: [
         'src/**/*.ts',
-        '!src/decorators/*.ts',
-        '!src/helpers/*.ts',
-        '!src/http/Server.ts',
     ],
     coverageDirectory: 'coverage',
     coverageProvider: 'v8',
@@ -17,12 +14,6 @@ const jestConfig: Config.InitialOptions = {
     preset: 'ts-jest',
     roots: [
         '<rootDir>/src',
-    ],
-    setupFiles: [
-        './jest.setup.ts',
-    ],
-    setupFilesAfterEnv: [
-        './jest.setupEnv.ts',
     ],
     testEnvironment: 'node',
 }

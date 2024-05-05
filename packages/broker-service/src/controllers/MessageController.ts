@@ -11,7 +11,7 @@ const joiUuid = Joi.string().length(36).regex(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]
 const listQuerySchema = Joi.object({
     after: Joi.string().isoDate().when('afterId', { then: Joi.required() }),
     before: Joi.string().isoDate().when('beforeId', { then: Joi.required() }),
-    cursor: Joi.string().base64(),
+    cursor: Joi.string().base64({ urlSafe: true, paddingRequired: false }),
     direction: Joi.string().valid('asc', 'desc').default('asc'),
     limit: Joi.number().min(0).max(100).default(10),
     status: Joi.string().valid(...Object.values(MessageStatus)),

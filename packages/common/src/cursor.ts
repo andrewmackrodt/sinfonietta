@@ -11,9 +11,9 @@ export enum CursorComparator {
 
 const comparatorIndexes = Object.values(CursorComparator)
     .reduce((res, comparator, i) => {
-        res[comparator] = i.toString(10)
+        res[comparator] = i
         return res
-    }, {} as Record<CursorComparator, string>)
+    }, {} as Record<CursorComparator, number>)
 
 export interface Cursor {
     comparator: CursorComparator
@@ -35,6 +35,33 @@ interface CursableRecord {
     created_at: Date | string
 }
 
+function hex2bytes(value: string): number[] {
+    if (value.length % 2 !== 0) {
+        value = '0' + value
+    }
+    const bytes: number[] = []
+    for (let i = 0; i < value.length; i += 2) {
+        bytes.push(parseInt(value.substring(i, i + 2), 16))
+    }
+    return bytes
+}
+
+function dec2bytes(value: number): number[] {
+    return hex2bytes(value.toString(16))
+}
+
+export function compileCursor(cursor: Cursor): string {
+    const bytes: number[] = []
+    const comparator = comparatorIndexes[cursor.comparator] ?? comparatorIndexes[CursorComparator.GREATER_THAN]
+    bytes.push(...dec2bytes(comparator))
+    bytes.push(...dec2bytes(new Date(cursor.timestamp).getTime()))
+    if (cursor.id) {
+        bytes.push(...hex2bytes(cursor.id.toLowerCase().replace(/[^a-f0-9]/g, '')))
+    }
+    const str = bytes.map(n => String.fromCharCode(n)).join('')
+    return btoa(str).replace(/\//g, '_').replace(/\+/g, '-').replace(/=+$/, '')
+}
+
 export function createCursor<T extends CursableRecord>(data: T[], sort: SortDirection, page: PageDirection): string {
     if (data.length === 0) {
         return ''
@@ -44,31 +71,24 @@ export function createCursor<T extends CursableRecord>(data: T[], sort: SortDire
         ? data[data.length - 1]
         : data[0]
 
-    const cursor: string[] = []
-
-    const invert = (
+    const comparator = (
             (page === 'next' && sort === 'desc') ||
             (page === 'prev' && sort === 'asc'))
-        ? comparatorIndexes[CursorComparator.LESS_THAN]
-        : comparatorIndexes[CursorComparator.GREATER_THAN]
+        ? CursorComparator.LESS_THAN
+        : CursorComparator.GREATER_THAN
 
-    cursor.push(invert)
+    const timestamp = (
+        typeof record.created_at === 'object'
+            ? record.created_at
+            : new Date(record.created_at))
+        .toISOString()
 
-    let date: Date
-
-    if (typeof record.created_at !== 'object') {
-        date = new Date(record.created_at)
-    } else {
-        date = record.created_at
-    }
-
-    cursor.push(date.getTime().toString(10))
-
-    if (record.id) {
-        cursor.push(record.id)
-    }
-
-    return btoa(cursor.join('|'))
+    return compileCursor({
+        comparator,
+        direction: 'asc',
+        timestamp,
+        id: record.id,
+    })
 }
 
 export function createCursorFrom(cursor: string, direction: SortDirection, page: PageDirection): string | undefined {
@@ -110,34 +130,45 @@ export function createCursorFrom(cursor: string, direction: SortDirection, page:
     }
 }
 
-export function compileCursor(cursor: Cursor): string {
-    const segments: string[] = []
+function bytes2hex(value: number[]): string {
+    return value.map(n => {
+        let hex = n.toString(16)
+        if (hex.length < 2) {
+            hex = '0' + hex
+        }
+        return hex
+    }).join('')
+}
 
-    const idx = comparatorIndexes[cursor.comparator] ?? comparatorIndexes[CursorComparator.GREATER_THAN]
-    segments.push(idx)
-    segments.push(new Date(cursor.timestamp).getTime().toString(10))
-
-    if (cursor.id) {
-        segments.push(cursor.id)
-    }
-
-    return btoa(segments.join('|'))
+function bytes2dec(value: number[]): number {
+    return parseInt(bytes2hex(value), 16)
 }
 
 export function parseCursor(cursor: string): Cursor {
-    const [cStrIdx, timestamp, id] = atob(cursor).split('|')
-    let cIdx = parseInt(cStrIdx)
-
-    if (isNaN(cIdx) || cIdx < 0 || 3 < cIdx) {
-        cIdx = 2
+    const bytes: number[] = []
+    const str = atob(cursor.replace(/_/g, '/').replace(/-/g, '+'))
+    for (let i = 0; i < str.length; i++) {
+        bytes.push(str.charCodeAt(i))
     }
 
-    const comparator = Object.values(CursorComparator)[cIdx]
+    const comparator = Object.values(CursorComparator)[bytes2dec(bytes.slice(0, 1))]
+    const timestamp = bytes2dec(bytes.slice(1, 7))
+    let rawId = bytes2hex(bytes.slice(7))
+    let id: string | undefined
+    if (rawId) {
+        id = [
+            rawId.substring(0, 8),
+            rawId.substring(8, 12),
+            rawId.substring(12, 16),
+            rawId.substring(16, 20),
+            rawId.substring(20),
+        ].join('-')
+    }
 
     return {
-        comparator: Object.values(CursorComparator)[cIdx],
+        comparator,
         direction: comparator[0] === 'g' ? 'asc' : 'desc',
-        timestamp: new Date(parseInt(timestamp)).toISOString(),
+        timestamp: new Date(timestamp).toISOString(),
         id,
     }
 }
