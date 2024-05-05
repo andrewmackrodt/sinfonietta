@@ -5,7 +5,7 @@ import { info, error } from './helpers/debug'
 import { BootService } from './services/BootService'
 import { Service } from './services/Service'
 import EventEmitter2 from 'eventemitter2'
-import { AggregatorRegistry, collectDefaultMetrics } from 'prom-client'
+import {AggregatorRegistry, collectDefaultMetrics, PrometheusContentType} from 'prom-client'
 import cluster, { Worker } from 'cluster'
 
 @injectable()
@@ -49,7 +49,7 @@ export class Application {
         collectDefaultMetrics()
 
         if (options?.cluster) {
-            const aggregatorRegistry = new AggregatorRegistry()
+            const aggregatorRegistry = new AggregatorRegistry<PrometheusContentType>()
 
             if (cluster.isPrimary) {
                 return clusterApplication({
@@ -111,7 +111,7 @@ export class Application {
         }
     }
 
-    private onGetMetricsReq(worker: Worker, aggregatorRegistry: AggregatorRegistry) {
+    private onGetMetricsReq(worker: Worker, aggregatorRegistry: AggregatorRegistry<PrometheusContentType>) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         worker.on('message', async (message: any) => {
             if (typeof message === 'object'

@@ -7,5 +7,6 @@ packages/*/node_modules/
 packages/*/*.iml
 
 # include root dependecies
+!.yarnrc.yml
 !package.json
 !yarn.lock

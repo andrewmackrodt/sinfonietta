@@ -67,10 +67,10 @@
 </template>
 
 <script lang="ts">
-import { createUrlFromProps, parsePropsFromUrl, parseUrl, setUrlFromProps } from '../helpers/url'
-import { api, ListMessagesOptions, Message, MessageStatus } from '../services/api'
 import AlertComponent from './AlertComponent.vue'
 import MessageListComponent from './MessageListComponent.vue'
+import { createUrlFromProps, parsePropsFromUrl, parseUrl, setUrlFromProps } from '../helpers/url'
+import { api, ListMessagesOptions, Message, MessageStatus } from '../services/api'
 import { createCursor, createCursorFrom, PageDirection, SortDirection } from '@lib/common/cursor'
 import { Options, Vue } from 'vue-class-component'
 import { RowClickEvent, SortChangeEvent } from 'vue-good-table-next'
@@ -112,7 +112,7 @@ export default class MessageSearchComponent extends Vue {
     alert = { level: '', message: '' }
     isAutoRefresh = false
     isLoaded = false
-    refreshTimer?: number | NodeJS.Timer
+    refreshTimer?: number
     isSubmitDisabled = true
     isUnmounting = false
 
@@ -182,7 +182,7 @@ export default class MessageSearchComponent extends Vue {
 
         await this.loadData()
 
-        this.refreshTimer = setTimeout(() => this.repeatLoadData(), 5000)
+        this.refreshTimer = setTimeout(() => this.repeatLoadData(), 5000) as any as number
     }
     //endregion
 

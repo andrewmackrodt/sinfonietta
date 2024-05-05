@@ -1,6 +1,5 @@
-app/broker-service/coverage/
-bower_components/
 build/
+coverage/
 node_modules/
 vendor/
 !.idea/
@@ -11,6 +10,7 @@ vendor/
 .idea/*_prj.xml
 .vagrant/
 .vscode/
+.yarn/
 !.vscode/launch.json
 Thumbs.db
 *-error.log

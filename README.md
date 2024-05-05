@@ -2,7 +2,7 @@
 
 ## Quick Start
 
-Node.js v16 or greater and yarn are required:
+Node.js v20 or greater and yarn v4 are required:
 
 ```sh
 git clone https://github.com/andrewmackrodt/sinfonietta.git

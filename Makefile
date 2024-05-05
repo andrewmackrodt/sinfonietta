@@ -3,7 +3,7 @@ SHELL=/bin/bash
 .PHONY: build dist install start clean
 
 build:
-	@docker build -f docker/broker/Dockerfile -t andrewmackrodt/sinfonietta .
+	@docker build -t sinfonietta .
 
 dist: install clean-dist
 	@yarn build
@@ -15,7 +15,7 @@ start:
 	@docker run --rm \
 		-e PORT=8080 \
 		-p 8080:8080 \
-		andrewmackrodt/sinfonietta
+		sinfonietta
 
 clean-dist:
 	@if [[ -d ./build/ ]]; then \
@@ -23,6 +23,6 @@ clean-dist:
 	fi
 
 clean-docker:
-	@docker rmi -f andrewmackrodt/sinfonietta
+	@docker rmi -f sinfonietta
 
 clean: clean-dist clean-docker

@@ -167,6 +167,7 @@ module.exports = {
               {
                 loader: MiniCssExtractPlugin.loader,
                 options: {
+                  esModule: false,
                   publicPath: '../',
                 },
               },
@@ -246,9 +247,9 @@ module.exports = {
     hot: true,
     historyApiFallback: true,
     open: true,
-    proxy: {
-      '/api': 'http://localhost:8080',
-    },
+    proxy: [
+      { context: '/api', target: 'http://localhost:8080' },
+    ],
     static: __dirname,
   },
   resolve: {

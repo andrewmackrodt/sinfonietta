@@ -52,8 +52,7 @@ export function config(name: string) {
 
     configFromEnv[name] = isFromEnv
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (target: any, propertyKey: (string | symbol), parameterIndex: number) => {
+    return (target: unknown, propertyKey: (string | symbol | undefined), parameterIndex: number) => {
         return inject(name)(target, propertyKey, parameterIndex)
     }
 }

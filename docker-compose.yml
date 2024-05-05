@@ -1,10 +1,10 @@
-version: '3.7'
-
 services:
-  broker:
+  sinfonietta:
+    image: sinfonietta
+    platform: linux/amd64
+    pull_policy: build
     build:
-      context: ./
-      dockerfile: ./docker/broker/Dockerfile
+      dockerfile: Dockerfile
     environment:
       RETHINKDB_CONNECTION_HOST: rethinkdb
     ports:
@@ -15,9 +15,8 @@ services:
   rethinkdb:
     image: rethinkdb:2-bullseye-slim
     ports:
-      - 127.0.0.1:27015:8080/tcp
-      - 127.0.0.1:28015:28015
-      - 172.17.0.1:28015:28015
+      - 127.0.0.1:8888:8080/tcp
+      - 127.0.0.1:28015:28015/tcp
     volumes:
       - rethinkdb_data:/data
     deploy:
